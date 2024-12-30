@@ -2,8 +2,10 @@ package com.example.demo.service;
 
 import com.example.demo.dto.BoardDto;
 import com.example.demo.entity.BoardEntity;
+import com.example.demo.entity.BoardRepositoryCustom;
 import com.example.demo.model.Header;
 import com.example.demo.model.Pagination;
+import com.example.demo.model.SearchCondition;
 import com.example.demo.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,14 +23,15 @@ import java.util.List;
 @Service
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final BoardRepositoryCustom boardRepositoryCustom;
 
     /**
      * 게시글 목록 가져오기
      */
-    public List<BoardDto> getBoardList() {
-        List<BoardEntity> boardEntities = boardRepository.findAll();
+    public Header<List<BoardDto>> getBoardList(Pageable pageable, SearchCondition searchCondition) {
         List<BoardDto> dtos = new ArrayList<>();
 
+        Page<BoardEntity> boardEntities = boardRepositoryCustom.findAllBySearchCondition(pageable, searchCondition);
         for (BoardEntity entity : boardEntities) {
             BoardDto dto = BoardDto.builder()
                     .idx(entity.getIdx())
@@ -37,10 +40,20 @@ public class BoardService {
                     .contents(entity.getContents())
                     .createdAt(entity.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
                     .build();
+
             dtos.add(dto);
         }
-        return dtos;
+
+        Pagination pagination = new Pagination(
+                (int) boardEntities.getTotalElements()
+                , pageable.getPageNumber() + 1
+                , pageable.getPageSize()
+                , 10
+        );
+
+        return Header.OK(dtos, pagination);
     }
+
 
     /**
      * 게시글 가져오기

@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.BoardDto;
 import com.example.demo.entity.BoardEntity;
 import com.example.demo.model.Header;
+import com.example.demo.model.SearchCondition;
 import com.example.demo.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +21,10 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/board/list")
-    public Header<List<BoardDto>> boardList(@PageableDefault(sort = {"idx"}) Pageable pageable
+    public Header<List<BoardDto>> boardList(@PageableDefault(sort = {"idx"}) Pageable pageable, SearchCondition searchCondition
     ) {
 
-        return boardService.getBoardList(pageable);
+        return boardService.getBoardList(pageable,searchCondition);
     }
 
     @GetMapping("/board/{id}")
