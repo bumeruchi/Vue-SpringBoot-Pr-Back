@@ -71,7 +71,7 @@ public class WebSecurityConfig {
                 // 요청에 대한 권한 설정
                 .authorizeHttpRequests(auth -> auth
                         // 로그인 요청을 허용해주지 않았다면 403이 발생
-                        .requestMatchers("/user/login","/board/list").permitAll()
+                        .requestMatchers("/user/login").permitAll()
                         // 그 외 URL 별 권한 설정 ...
                         .anyRequest().permitAll()
                 )
