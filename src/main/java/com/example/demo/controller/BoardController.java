@@ -28,7 +28,7 @@ public class BoardController {
     }
 
     @GetMapping("/board/{id}")
-    public BoardDto getBoard(@PathVariable Long id) {
+    public BoardDto getBoard(@PathVariable ("id") Long id) {
         return boardService.getBoard(id);
     }
 
@@ -43,7 +43,7 @@ public class BoardController {
     }
 
     @DeleteMapping("/board/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable ("id") Long id) {
         boardService.delete(id);
     }
 }
